@@ -17,20 +17,20 @@ pipeline {
 
         stage('Clone App Repo') {
             steps {
-                git branch: 'master', url: 'https://github.com/NEMCO-Projects/spring-petclinic-jenkins.git'
+                git branch: 'main', url: 'https://github.com/NEMCO-Projects/spring-petclinic-jenkins.git'
             }
         }
 
         stage('Provision Infrastructure with Terraform') {
             steps {
-                dir('terraform') {
-                    sh '''
-                        terraform init
-                        terraform apply -auto-approve
-                    '''
-                }
+                sh '''
+                    pwd && ls -la
+                    terraform init
+                    terraform apply -auto-approve
+                '''
             }
         }
+
 
         stage('Generate Dynamic Ansible Inventory') {
             steps {
