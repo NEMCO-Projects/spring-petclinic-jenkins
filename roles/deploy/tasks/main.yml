@@ -1,15 +1,19 @@
-- name: Deploy WAR to Tomcat
+---
+- name: Deploy WAR file to Tomcat
   hosts: tomcat_server
   become: yes
   tasks:
-    - name: Stop Tomcat
+    - name: Stop Tomcat if running
       shell: /opt/tomcat/bin/shutdown.sh || true
 
-    - name: Copy WAR to webapps
+    - name: Copy WAR file to Tomcat webapps
       copy:
         src: /home/ubuntu/app.war
         dest: /opt/tomcat/webapps/petclinic.war
         remote_src: yes
+        owner: tomcat
+        group: tomcat
+        mode: '0644'
 
     - name: Start Tomcat
       shell: /opt/tomcat/bin/startup.sh
