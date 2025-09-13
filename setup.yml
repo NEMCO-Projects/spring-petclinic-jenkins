@@ -1,16 +1,18 @@
 ---
-- name: Install Java 17 and Maven (minimal)
-  hosts: all
+- name: Configure Maven Server
+  hosts: maven_server
   become: yes
-  tasks:
+  roles:
+    - maven
 
-    - name: Update apt cache
-      apt:
-        update_cache: yes
+- name: Configure MySQL Server
+  hosts: mysql_server
+  become: yes
+  roles:
+    - mysql
 
-    - name: Install Java 17 and Maven
-      apt:
-        name:
-          - openjdk-17-jdk
-          - maven
-        state: present
+- name: Configure Tomcat Server
+  hosts: tomcat_server
+  become: yes
+  roles:
+    - tomcat
