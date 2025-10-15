@@ -1,0 +1,8 @@
+---
+- name: Setup Full 3-Tier PetClinic Environment
+  hosts: all
+  become: yes
+  roles:
+    - mysql
+    - maven
+    - tomcat
