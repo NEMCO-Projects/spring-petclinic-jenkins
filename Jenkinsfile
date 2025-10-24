@@ -37,7 +37,7 @@ pipeline {
                 script {
                     sh """
                         echo "[mysql_server]" > inventory
-                        echo "\$(cd terraform && terraform output -raw mysql_server_ip) ansible_user=ubuntu ansible_ssh_private_key_file=${SSH_PRIVATE_KEY_PATH} ansible_ssh_common_args='-o StrictHostKeyChecking=no'" >> inventory
+                        echo "\$(terraform output -raw mysql_server_ip) ansible_user=ubuntu ansible_ssh_private_key_file=${SSH_PRIVATE_KEY_PATH} ansible_ssh_common_args='-o StrictHostKeyChecking=no'" >> inventory
                     """
                 }
             }
