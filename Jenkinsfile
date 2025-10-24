@@ -38,12 +38,6 @@ pipeline {
                     sh """
                         echo "[mysql_server]" > inventory
                         echo "\$(cd terraform && terraform output -raw mysql_server_ip) ansible_user=ubuntu ansible_ssh_private_key_file=${SSH_PRIVATE_KEY_PATH} ansible_ssh_common_args='-o StrictHostKeyChecking=no'" >> inventory
-
-                        echo "[tomcat_server]" >> inventory
-                        echo "\$(cd terraform && terraform output -raw tomcat_server_ip) ansible_user=ubuntu ansible_ssh_private_key_file=${SSH_PRIVATE_KEY_PATH} ansible_ssh_common_args='-o StrictHostKeyChecking=no'" >> inventory
-
-                        echo "[maven_server]" >> inventory
-                        echo "\$(cd terraform && terraform output -raw maven_server_ip) ansible_user=ubuntu ansible_ssh_private_key_file=${SSH_PRIVATE_KEY_PATH} ansible_ssh_common_args='-o StrictHostKeyChecking=no'" >> inventory
                     """
                 }
             }
@@ -72,24 +66,6 @@ pipeline {
                 dir('spring-petclinic-jenkins') {
                     sh "mvn clean package"
                 }
-            }
-        }
-
-        stage('Copy Jar to Tomcat Server') {
-            steps {
-                script {
-                    def tomcatIp = sh(script: "cd terraform && terraform output -raw tomcat_server_ip", returnStdout: true).trim()
-
-                    sh """
-                        scp -i ${SSH_PRIVATE_KEY_PATH} -o StrictHostKeyChecking=no spring-petclinic-jenkins/target/*.jar ubuntu@${tomcatIp}:/home/ubuntu/app.war
-                    """
-                }
-            }
-        }
-
-        stage('Deploy WAR on Tomcat Server') {
-            steps {
-                sh "ansible-playbook -i inventory deploy.yml"
             }
         }
     }
