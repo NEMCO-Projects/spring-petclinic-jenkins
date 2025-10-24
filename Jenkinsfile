@@ -52,7 +52,7 @@ pipeline {
         stage('Update MySQL IP in application.properties') {
             steps {
                 script {
-                    def mysqlIp = sh(script: "cd terraform && terraform output -raw mysql_server_ip", returnStdout: true).trim()
+                    def mysqlIp = sh(script: "terraform output -raw mysql_server_ip", returnStdout: true).trim()
 
                     sh """
                         sed -i 's|jdbc:mysql://youip/petclinic|jdbc:mysql://${mysqlIp}/petclinic|' spring-petclinic-jenkins/src/main/resources/application.properties
